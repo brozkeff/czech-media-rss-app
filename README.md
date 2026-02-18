@@ -2,7 +2,9 @@
 
 Small desktop demo app for browsing recent headlines from major Czech media outlets via RSS.
 
-This repository is intentionally simple and public-demo friendly: it showcases a Codex + forge-council style workflow, deterministic feed selection, and basic UI behavior in Tkinter.
+Showcases capability of GPT-5.3 Codex + agent personas from <https://github.com/N4M3Z/forge-council> to quickly build functional app. App prepared by installing forge-council, enabling `/experimental` Multi-agents feature and Linux Bubblewrap sandbox, invoking `$Council "short prompt to make this app..."` $Council should "Convene a PAI-style council — 3-round debate where specialists challenge each other."
+
+![Screenshot of running demo app.](screenshots/screenshot1.png)
 
 ## What it does
 
