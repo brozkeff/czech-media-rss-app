@@ -1,9 +1,12 @@
+"""Feed fetching and quality scoring for the media RSS desktop app."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from email.utils import parsedate_to_datetime
-from typing import Any
+from threading import Event
+from typing import Any, Callable
 
 import feedparser
 import requests
@@ -15,6 +18,8 @@ MAX_HEADLINES_PER_SOURCE = 10
 
 @dataclass
 class NewsItem:
+    """Single normalized news headline item."""
+
     source_name: str
     title: str
     link: str
@@ -23,6 +28,8 @@ class NewsItem:
 
 @dataclass
 class FeedCandidateResult:
+    """Quality score and error details for one feed candidate URL."""
+
     url: str
     score: float
     error: str | None = None
@@ -31,21 +38,26 @@ class FeedCandidateResult:
 
 @dataclass
 class SourceNewsResult:
+    """Resolved result for one source after candidate selection."""
+
     source_id: str
     source_name: str
     chosen_feed: str | None
     headlines: list[NewsItem]
     status: str
+    status_level: str
     score: float
 
 
 def _to_utc(value: datetime) -> datetime:
+    """Convert datetime to UTC while preserving absolute time."""
     if value.tzinfo is None:
         return value.replace(tzinfo=timezone.utc)
     return value.astimezone(timezone.utc)
 
 
 def _parse_entry_datetime(entry: Any) -> datetime | None:
+    """Parse publication datetime from feed entry data."""
     parsed_struct = entry.get("published_parsed") or entry.get("updated_parsed")
     if parsed_struct:
         return datetime(*parsed_struct[:6], tzinfo=timezone.utc)
@@ -63,6 +75,7 @@ def _parse_entry_datetime(entry: Any) -> datetime | None:
 
 
 def _fetch_and_parse(url: str) -> tuple[Any | None, str | None]:
+    """Download and parse one RSS feed URL."""
     try:
         response = requests.get(
             url,
@@ -83,6 +96,7 @@ def _fetch_and_parse(url: str) -> tuple[Any | None, str | None]:
 
 
 def _score_feed(parsed: Any) -> tuple[float, int]:
+    """Score feed quality using completeness, freshness, and duplicates."""
     entries = list(getattr(parsed, "entries", []) or [])
     if not entries:
         return 0.0, 0
@@ -131,6 +145,7 @@ def _score_feed(parsed: Any) -> tuple[float, int]:
 
 
 def _news_from_entries(source_name: str, entries: list[Any]) -> list[NewsItem]:
+    """Normalize feed entries into displayable headline items."""
     items: list[NewsItem] = []
     for entry in entries:
         title = (entry.get("title") or "").strip()
@@ -152,6 +167,7 @@ def _news_from_entries(source_name: str, entries: list[Any]) -> list[NewsItem]:
 
 
 def resolve_best_feed(source: dict[str, Any]) -> SourceNewsResult:
+    """Resolve the best feed candidate for one configured source."""
     source_id = source["id"]
     source_name = source["name"]
     candidates = source["candidates"]
@@ -182,13 +198,16 @@ def resolve_best_feed(source: dict[str, Any]) -> SourceNewsResult:
             chosen_feed=None,
             headlines=[],
             status=f"Unavailable: {summary}",
+            status_level="unavailable",
             score=0.0,
         )
 
     headlines = _news_from_entries(source_name, list(best_parsed.entries))
     status = f"Reliable ({len(headlines)} headlines, score {best_score:.1f})"
+    status_level = "reliable"
     if len(headlines) < 2 or best_score < 35:
         status = f"Partial ({len(headlines)} headlines, score {best_score:.1f})"
+        status_level = "partial"
 
     return SourceNewsResult(
         source_id=source_id,
@@ -196,12 +215,37 @@ def resolve_best_feed(source: dict[str, Any]) -> SourceNewsResult:
         chosen_feed=best_feed,
         headlines=headlines,
         status=status,
+        status_level=status_level,
         score=best_score,
     )
 
 
-def get_latest_news(sources: list[dict[str, Any]]) -> tuple[list[SourceNewsResult], list[NewsItem]]:
-    results = [resolve_best_feed(source) for source in sources]
+def get_latest_news(
+    sources: list[dict[str, Any]],
+    progress_callback: Callable[[int, int, SourceNewsResult], None] | None = None,
+    cancel_event: Event | None = None,
+) -> tuple[list[SourceNewsResult], list[NewsItem]]:
+    """Resolve feeds for selected sources and return merged news items.
+
+    Args:
+        sources: Source definitions to fetch.
+        progress_callback: Optional callback invoked after each resolved source.
+        cancel_event: Optional event that interrupts processing between sources.
+
+    Returns:
+        Tuple of per-source results and sorted merged headlines.
+    """
+    results: list[SourceNewsResult] = []
+    total = len(sources)
+
+    for index, source in enumerate(sources, start=1):
+        if cancel_event and cancel_event.is_set():
+            break
+        result = resolve_best_feed(source)
+        results.append(result)
+        if progress_callback:
+            progress_callback(index, total, result)
+
     all_items = [item for source_result in results for item in source_result.headlines]
     all_items.sort(key=lambda item: item.published, reverse=True)
     return results, all_items
