@@ -13,7 +13,7 @@ import requests
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from czech_media_rss_app.config import MEDIA_SOURCES
 
-USER_AGENT = "czech-media-rss-app-feed-validator/0.2 (+https://github.com/brozkeff/czech-media-rss-app)"
+USER_AGENT = "czech-media-rss-app-feed-validator/0.2.0 (+https://github.com/brozkeff/czech-media-rss-app)"
 TIMEOUT_SECONDS = 12
 
 
