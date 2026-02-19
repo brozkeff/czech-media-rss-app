@@ -1,7 +1,25 @@
+"""Static media source configuration for the RSS desktop app."""
+
+from __future__ import annotations
+
+TOPIC_GENERAL = "general"
+
+PRESET_DEFINITIONS: dict[str, dict[str, str]] = {
+    "top_cz": {"label": "Top Czech News", "description": "Core Czech national outlets."},
+    "top_sk": {"label": "Top Slovak News", "description": "Core Slovak national outlets."},
+    "top_mixed": {"label": "Top CZ + SK", "description": "Combined Czech and Slovak overview."},
+}
+
 MEDIA_SOURCES = [
     {
         "id": "ct24",
         "name": "CT24",
+        "country": "CZ",
+        "language": "cs",
+        "topic": TOPIC_GENERAL,
+        "tier": "public_service",
+        "presets": ["top_cz", "top_mixed"],
+        "enabled_by_default": True,
         "candidates": [
             "https://ct24.ceskatelevize.cz/rss/hlavni-zpravy",
             "https://ct24.ceskatelevize.cz/rss",
@@ -10,6 +28,12 @@ MEDIA_SOURCES = [
     {
         "id": "idnes",
         "name": "iDNES.cz",
+        "country": "CZ",
+        "language": "cs",
+        "topic": TOPIC_GENERAL,
+        "tier": "mainstream",
+        "presets": ["top_cz", "top_mixed"],
+        "enabled_by_default": True,
         "candidates": [
             "https://servis.idnes.cz/rss.aspx?c=zpravodaj",
             "https://servis.idnes.cz/rss.aspx?c=domaci",
@@ -18,6 +42,12 @@ MEDIA_SOURCES = [
     {
         "id": "novinky",
         "name": "Novinky.cz",
+        "country": "CZ",
+        "language": "cs",
+        "topic": TOPIC_GENERAL,
+        "tier": "mainstream",
+        "presets": ["top_cz", "top_mixed"],
+        "enabled_by_default": True,
         "candidates": [
             "https://www.novinky.cz/rss",
             "https://www.novinky.cz/rss/domaci",
@@ -26,6 +56,12 @@ MEDIA_SOURCES = [
     {
         "id": "seznam_zpravy",
         "name": "Seznam Zpravy",
+        "country": "CZ",
+        "language": "cs",
+        "topic": TOPIC_GENERAL,
+        "tier": "mainstream",
+        "presets": ["top_cz", "top_mixed"],
+        "enabled_by_default": True,
         "candidates": [
             "https://www.seznamzpravy.cz/rss",
             "https://www.seznamzpravy.cz/rss/sekce/domaci-5",
@@ -34,22 +70,40 @@ MEDIA_SOURCES = [
     {
         "id": "aktualne",
         "name": "Aktualne.cz",
+        "country": "CZ",
+        "language": "cs",
+        "topic": TOPIC_GENERAL,
+        "tier": "mainstream",
+        "presets": ["top_cz", "top_mixed"],
+        "enabled_by_default": True,
         "candidates": [
             "https://zpravy.aktualne.cz/rss/",
             "https://zpravy.aktualne.cz/rss?section=domaci",
         ],
     },
     {
-        "id": "denikn",
-        "name": "Denik N",
+        "id": "denikn_cz",
+        "name": "Denik N (CZ)",
+        "country": "CZ",
+        "language": "cs",
+        "topic": TOPIC_GENERAL,
+        "tier": "quality_press",
+        "presets": ["top_cz", "top_mixed"],
+        "enabled_by_default": False,
         "candidates": [
             "https://denikn.cz/feed/",
             "https://denikn.cz/feed/?cat=1",
         ],
     },
     {
-        "id": "hn",
+        "id": "hn_cz",
         "name": "Hospodarske noviny",
+        "country": "CZ",
+        "language": "cs",
+        "topic": TOPIC_GENERAL,
+        "tier": "business",
+        "presets": ["top_cz", "top_mixed"],
+        "enabled_by_default": False,
         "candidates": [
             "https://archiv.hn.cz/rss/1",
             "https://archiv.hn.cz/rss/8",
@@ -58,9 +112,99 @@ MEDIA_SOURCES = [
     {
         "id": "respekt",
         "name": "Respekt",
+        "country": "CZ",
+        "language": "cs",
+        "topic": TOPIC_GENERAL,
+        "tier": "analysis",
+        "presets": ["top_cz", "top_mixed"],
+        "enabled_by_default": False,
         "candidates": [
             "https://www.respekt.cz/rss.xml",
             "http://feeds.feedburner.com/respekt-clanky",
+        ],
+    },
+    {
+        "id": "aktuality_sk",
+        "name": "Aktuality.sk",
+        "country": "SK",
+        "language": "sk",
+        "topic": TOPIC_GENERAL,
+        "tier": "mainstream",
+        "presets": ["top_sk", "top_mixed"],
+        "enabled_by_default": True,
+        "candidates": [
+            "https://www.aktuality.sk/rss/",
+            "https://www.aktuality.sk/rss/spravy/",
+        ],
+    },
+    {
+        "id": "sme_sk",
+        "name": "SME.sk",
+        "country": "SK",
+        "language": "sk",
+        "topic": TOPIC_GENERAL,
+        "tier": "mainstream",
+        "presets": ["top_sk", "top_mixed"],
+        "enabled_by_default": True,
+        "candidates": [
+            "https://www.sme.sk/rss-index",
+            "https://domov.sme.sk/rss",
+        ],
+    },
+    {
+        "id": "dennikn_sk",
+        "name": "Dennik N (SK)",
+        "country": "SK",
+        "language": "sk",
+        "topic": TOPIC_GENERAL,
+        "tier": "quality_press",
+        "presets": ["top_sk", "top_mixed"],
+        "enabled_by_default": True,
+        "candidates": [
+            "https://dennikn.sk/feed/",
+            "https://dennikn.sk/feed/?cat=1",
+        ],
+    },
+    {
+        "id": "pravda_sk",
+        "name": "Pravda (SK)",
+        "country": "SK",
+        "language": "sk",
+        "topic": TOPIC_GENERAL,
+        "tier": "mainstream",
+        "presets": ["top_sk", "top_mixed"],
+        "enabled_by_default": False,
+        "candidates": [
+            "https://spravy.pravda.sk/rss/",
+            "https://spravy.pravda.sk/domace/clanok/rss",
+        ],
+    },
+    {
+        "id": "hnonline_sk",
+        "name": "HNonline (SK)",
+        "country": "SK",
+        "language": "sk",
+        "topic": TOPIC_GENERAL,
+        "tier": "business",
+        "presets": ["top_sk", "top_mixed"],
+        "enabled_by_default": False,
+        "candidates": [
+            "https://hnonline.sk/rss",
+            "https://hnonline.sk/hn24/rss",
+        ],
+    },
+    {
+        "id": "stvr_spravy",
+        "name": "STVR Spravy",
+        "country": "SK",
+        "language": "sk",
+        "topic": TOPIC_GENERAL,
+        "tier": "public_service",
+        "presets": ["top_sk", "top_mixed"],
+        "enabled_by_default": False,
+        "candidates": [
+            "https://spravy.stvr.sk/feed/",
+            "https://www.stvr.sk/rss",
         ],
     },
 ]
