@@ -11,7 +11,7 @@ from typing import Any, Callable
 import feedparser
 import requests
 
-USER_AGENT = "czech-media-rss-app/0.1 (+https://github.com/brozkeff/czech-media-rss-app)"
+USER_AGENT = "czech-media-rss-app/0.2 (+https://github.com/brozkeff/czech-media-rss-app)"
 REQUEST_TIMEOUT = 6
 MAX_HEADLINES_PER_SOURCE = 10
 

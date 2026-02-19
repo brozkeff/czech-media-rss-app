@@ -1,6 +1,6 @@
 [project]
 name = "czech-media-rss-app"
-version = "0.1.0"
+version = "0.2"
 description = "Tkinter demo app for browsing recent headlines from major Czech media outlets via RSS."
 readme = "README.md"
 requires-python = ">=3.10"
