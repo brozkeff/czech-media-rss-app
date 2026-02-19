@@ -147,7 +147,6 @@ MEDIA_SOURCES = [
         "presets": ["top_sk", "top_mixed"],
         "enabled_by_default": True,
         "candidates": [
-            "https://www.sme.sk/rss-index",
             "https://domov.sme.sk/rss",
         ],
     },
@@ -162,21 +161,6 @@ MEDIA_SOURCES = [
         "enabled_by_default": True,
         "candidates": [
             "https://dennikn.sk/feed/",
-            "https://dennikn.sk/feed/?cat=1",
-        ],
-    },
-    {
-        "id": "pravda_sk",
-        "name": "Pravda (SK)",
-        "country": "SK",
-        "language": "sk",
-        "topic": TOPIC_GENERAL,
-        "tier": "mainstream",
-        "presets": ["top_sk", "top_mixed"],
-        "enabled_by_default": False,
-        "candidates": [
-            "https://spravy.pravda.sk/rss/",
-            "https://spravy.pravda.sk/domace/clanok/rss",
         ],
     },
     {
@@ -190,7 +174,6 @@ MEDIA_SOURCES = [
         "enabled_by_default": False,
         "candidates": [
             "https://hnonline.sk/rss",
-            "https://hnonline.sk/hn24/rss",
         ],
     },
     {
@@ -204,7 +187,6 @@ MEDIA_SOURCES = [
         "enabled_by_default": False,
         "candidates": [
             "https://spravy.stvr.sk/feed/",
-            "https://www.stvr.sk/rss",
         ],
     },
 ]
