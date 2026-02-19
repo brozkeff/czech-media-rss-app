@@ -1,2 +1,12 @@
 #!/usr/bin/env sh
-uv run czech-media-rss
+# Quick launcher for this project.
+# - Always runs the app using project-managed dependencies via `uv run`.
+# - Works even when called from outside the repository root.
+# - Forwards any extra CLI arguments to the app entrypoint.
+
+set -eu
+
+SCRIPT_DIR="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
+cd "$SCRIPT_DIR"
+
+exec uv run czech-media-rss "$@"

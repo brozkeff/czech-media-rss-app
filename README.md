@@ -52,7 +52,7 @@ If `tkinter` is missing:
 uv venv
 source .venv/bin/activate
 uv pip install -r requirements.txt
-uv run czech-media-rss
+./czech-media-rss
 ```
 
 Alternative install path:
@@ -64,18 +64,19 @@ uv sync
 uv run python -m czech_media_rss_app.app
 ```
 
+After `uv` setup, you can use the wrapper `./czech-media-rss` for quick app launch.
+It runs `uv run czech-media-rss` from the project root and forwards any optional args.
+
 ## Feed validation
 
-Run a fresh check of configured feed candidates:
+Run a fresh check of configured feed candidates in the uv-managed environment:
 
 ```bash
-python3 scripts/validate_feeds.py --json-out reports/feed_validation_latest.json
+uv run python3 scripts/validate_feeds.py --json-out reports/feed_validation_latest.json
 ```
 
 Published validation artifacts:
 
-- `reports/feed_validation_2026-02-18.md`
-- `reports/feed_validation_2026-02-18.json`
 - `reports/feed_validation_latest.json`
 
 ## Notes
